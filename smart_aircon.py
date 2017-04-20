@@ -268,14 +268,14 @@ def train_rf(gateway_name=None):
     """
     users = None
     if gateway_name and len(gateway_name) > 0:
-        file_name = gateway_name+".txt"
+        file_name = "data/" + gateway_name+".txt"
         users = read_users(file_name)
 
         data = np.genfromtxt(file_name, delimiter='\t',skip_header=True)
-        out_file = gateway_name + "_rf.pk"
+        out_file = "models/" + gateway_name + "_rf.pk"
     else:
-        data = np.genfromtxt('all.txt', delimiter='\t', skip_header=True)
-        out_file = "all_rf.pk"
+        data = np.genfromtxt('data/all.txt', delimiter='\t', skip_header=True)
+        out_file = "models/all_rf.pk"
 
     model = rf(n_estimators=50, max_features=6)
     if users:
@@ -292,9 +292,9 @@ def load_model(gateway_name=None):
     :return loaded model (and list of users of the gateway)
     """
     if gateway_name and len(gateway_name) > 0:
-        model = pk.load(open(gateway_name + "_rf.pk", "r"))
+        model = pk.load(open("models/" + gateway_name + "_rf.pk", "r"))
     else:
-        model = pk.load(open("all_rf.pk", "r"))
+        model = pk.load(open("models/all_rf.pk", "r"))
     return model
 
 def check_params():
@@ -349,7 +349,7 @@ def test_prediction():
 def main():
 
     #train models
-    #train()
+    train()
 
     #2. load saved models
     load()
