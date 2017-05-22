@@ -335,8 +335,22 @@ def test_prediction():
     start = time.time()
 
     sensor_values = np.array([26.32667, 68.62, 29.3, 56, 0, -0.5733333, 0.7857129, -2.142857, 35, 10])
-    #user_info = [('c232', 39), ('d236', 41), ('j2610', 42), ('k2515', 30), ('s2218',34), ('y2622',33)] #userlist in gateway 1f1bf9
     user_info = [('c232', 39), ('d236', 41), ('s2218',34), ('y2622',33), ('abc123', 45)]
+    pmv = predict_PMV(sensor_values, user_info)
+    end = time.time()
+    print"completed prediction in %f secs" % (end - start)
+    print "predicted PMV: %f" % pmv
+    #print costs
+
+
+def test_optimization():
+    print "start optimization"
+    start = time.time()
+
+    sensor_values = np.array([26.32667, 68.62, 29.3, 56, 0, -0.5733333, 0.7857129, -2.142857, 35, 10])
+    #user_info = [('c232', 39), ('d236', 41), ('j2610', 42), ('k2515', 30), ('s2218',34), ('y2622',33)] #userlist in gateway 1f1bf9
+    #user_info = [('c232', 39), ('d236', 41), ('s2218',34), ('y2622',33), ('abc123', 45)]
+    user_info = [('c232', 39), ('d236', 41), ('s2218', 34), ('y2622', 33)]
 
 
     costs, decisions = search_optimal_solution(sensor_values, user_info)
@@ -357,6 +371,7 @@ def main():
     #3. make predictions
 
     test_prediction()
+    test_optimization()
 
 
 
