@@ -13,8 +13,8 @@ GATEWAYS = ["11c85b", "1f1bf9", "62f77a", "a54379", "bacef8", "f6c9fe"]
 global g_users, g_average_model, g_gw_model
 
 # Setting-up simulated annealing parameters
-N_SA = 10
-K_SA = 50
+N_SA = 2
+K_SA = 20
 INITIAL_SCHEDULE = 0.2*np.ones(K_SA)
 SCHEDULE_SA = np.zeros(N_SA*K_SA)
 for i in range(N_SA):
