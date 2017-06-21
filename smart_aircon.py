@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor as rf
+from sklearn.linear_model import Ridge as lg
 
 import numpy as np
 
@@ -272,10 +273,10 @@ def train_rf(gateway_name=None):
         users = read_users(file_name)
 
         data = np.genfromtxt(file_name, delimiter='\t',skip_header=True)
-        out_file = "models/" + gateway_name + "_rf.pk"
+        out_file = "models/" + gateway_name + "_model.pk"
     else:
         data = np.genfromtxt('data/all.txt', delimiter='\t', skip_header=True)
-        out_file = "models/all_rf.pk"
+        out_file = "models/all_model.pk"
 
     model = rf(n_estimators=50, max_features=6)
     if users:
@@ -285,6 +286,36 @@ def train_rf(gateway_name=None):
         model.fit(data[:, 1:], data[:, 0])
         pk.dump(model, open(out_file, "w"))
 
+
+def train_lg(gateway_name=None):
+    """"
+    train random forest model for a gateway
+    or train random forest model using data from all gateways
+    :param gateway_name name of the gateway
+    :returns random forest model and list of users of the gateway
+    """
+    users = None
+    if gateway_name and len(gateway_name) > 0:
+        file_name = "data/" + gateway_name+".txt"
+        users = read_users(file_name)
+
+        data = np.genfromtxt(file_name, delimiter='\t',skip_header=True)
+        out_file = "models/" + gateway_name + "_model.pk"
+    else:
+        data = np.genfromtxt('data/all.txt', delimiter='\t', skip_header=True)
+        out_file = "models/all_model.pk"
+
+    model = lg()
+    if users:
+        model.fit(data[:, 2:], data[:, 0])
+        print "eeuu ",  model.score(data[:, 2:], data[:, 0])
+        pk.dump([model, users], open(out_file, "w"))
+    else:
+        model.fit(data[:, 1:], data[:, 0])
+        print "hello:  ", model.score(data[:, 1:], data[:, 0])
+        pk.dump(model, open(out_file, "w"))
+
+
 def load_model(gateway_name=None):
     """"
     load a trained model from file (pickle)
@@ -292,9 +323,9 @@ def load_model(gateway_name=None):
     :return loaded model (and list of users of the gateway)
     """
     if gateway_name and len(gateway_name) > 0:
-        model = pk.load(open("models/" + gateway_name + "_rf.pk", "r"))
+        model = pk.load(open("models/" + gateway_name + "_model.pk", "r"))
     else:
-        model = pk.load(open("models/all_rf.pk", "r"))
+        model = pk.load(open("models/all_model.pk", "r"))
     return model
 
 def check_params():
@@ -316,8 +347,8 @@ def train():
     print "start training"
     start = time.time()
     for gw in GATEWAYS:
-        train_rf(gw)
-    train_rf()
+        train_lg(gw)
+    train_lg()
     end = time.time()
     print"completed in %f secs" % (end - start)
 
