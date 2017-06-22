@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestRegressor as rf
-from sklearn.linear_model import Ridge as lg
+#from sklearn.linear_model import Ridge as lg
+from sklearn.svm import SVR as lg
 
 import numpy as np
 
@@ -278,7 +279,7 @@ def train_rf(gateway_name=None):
         data = np.genfromtxt('data/all.txt', delimiter='\t', skip_header=True)
         out_file = "models/all_model.pk"
 
-    model = rf(n_estimators=10, max_features=6)
+    model = rf(n_estimators=5, max_features=6)
     if users:
         model.fit(data[:, 2:], data[:, 0])
         print "R2(%s)=%f" % (gateway_name, model.score(data[:, 2:], data[:, 0]))
@@ -349,8 +350,8 @@ def train():
     print "start training"
     start = time.time()
     for gw in GATEWAYS:
-        train_rf(gw)
-    train_rf()
+        train_lg(gw)
+    train_lg()
     end = time.time()
     print"completed in %f secs" % (end - start)
 
