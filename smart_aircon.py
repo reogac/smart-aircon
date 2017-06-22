@@ -278,12 +278,14 @@ def train_rf(gateway_name=None):
         data = np.genfromtxt('data/all.txt', delimiter='\t', skip_header=True)
         out_file = "models/all_model.pk"
 
-    model = rf(n_estimators=50, max_features=6)
+    model = rf(n_estimators=10, max_features=6)
     if users:
         model.fit(data[:, 2:], data[:, 0])
+        print "R2(%s)=%f" % (gateway_name, model.score(data[:, 2:], data[:, 0]))
         pk.dump([model, users], open(out_file, "w"))
     else:
         model.fit(data[:, 1:], data[:, 0])
+        print "R2(all)=%f" % model.score(data[:, 1:], data[:, 0])
         pk.dump(model, open(out_file, "w"))
 
 
@@ -308,11 +310,11 @@ def train_lg(gateway_name=None):
     model = lg()
     if users:
         model.fit(data[:, 2:], data[:, 0])
-        print "eeuu ",  model.score(data[:, 2:], data[:, 0])
+        print "R2(%s)=%f" % (gateway_name, model.score(data[:, 2:], data[:, 0]))
         pk.dump([model, users], open(out_file, "w"))
     else:
         model.fit(data[:, 1:], data[:, 0])
-        print "hello:  ", model.score(data[:, 1:], data[:, 0])
+        print "R2(all)=%f" % model.score(data[:, 1:], data[:, 0])
         pk.dump(model, open(out_file, "w"))
 
 
@@ -347,8 +349,8 @@ def train():
     print "start training"
     start = time.time()
     for gw in GATEWAYS:
-        train_lg(gw)
-    train_lg()
+        train_rf(gw)
+    train_rf()
     end = time.time()
     print"completed in %f secs" % (end - start)
 
